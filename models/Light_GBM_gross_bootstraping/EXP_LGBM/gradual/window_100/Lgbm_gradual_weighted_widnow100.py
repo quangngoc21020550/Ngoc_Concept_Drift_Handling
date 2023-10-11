@@ -14,8 +14,7 @@ from sklearn.metrics import mean_absolute_error
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-gradual_df=pd.read_csv('/Series_generation/simulated_data/gradual_df.csv')
-
+gradual_df=pd.read_csv('D:/python-folder/KPDL/Series_generation/simulated_data/gradual_df.csv')
 def string_to_list(string_org):
     string=string_org.split(',')
     string_list=[]
@@ -213,6 +212,6 @@ gradual_df['testing_MAE'] = training_mean_mae_list
 gradual_df['training_RMSE'] = training_mean_rmse_list
 gradual_df['training_MAE'] = testing_mean_mae_list
 
-
-gradual_df.to_csv('gradual_cd_weighted_cv8_window100.csv',index=False)
-prediction_mean_df.to_csv('gradual_prediction_weighted_cv8_window100.csv',index=False)
+# models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_100/
+gradual_df.to_csv('D:/python-folder/KPDL/models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_100/gradual_cd_weighted_cv8_window100.csv',index=False)
+prediction_mean_df.to_csv('D:/python-folder/KPDL/models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_100/gradual_prediction_weighted_cv8_window100.csv',index=False)
