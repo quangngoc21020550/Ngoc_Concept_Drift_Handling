@@ -12,10 +12,13 @@ import lightgbm as lgb
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
 import warnings
+
+from config import LOCAL_ABSOLUTE_PATH
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
-incremental_df=pd.read_csv('../incremental_cd_2000.csv')
+incremental_df=pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/incremental_cd.csv')
 incremental_df=incremental_df.sort_values('start_point',ascending=True)
 incremental_df.reset_index(drop=True, inplace=True)
 
@@ -223,5 +226,5 @@ incremental_df['testing_MAE'] = training_mean_mae_list
 incremental_df['training_RMSE'] = training_mean_rmse_list
 incremental_df['training_MAE'] = testing_mean_mae_list
 
-incremental_df.to_csv('Linear_Incremental_cd_weighted_cv8_window200.csv',index=False)
-prediction_mean_df.to_csv('Linear_Incremental_prediction_weighted_cv8_window200.csv',index=False)
+incremental_df.to_csv(LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/incremental/window_200/Linear_Incremental_cd_weighted_cv8_window200.csv',index=False)
+prediction_mean_df.to_csv(LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/incremental/window_200/Linear_Incremental_prediction_weighted_cv8_window200.csv',index=False)

@@ -12,10 +12,13 @@ import lightgbm as lgb
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
 import warnings
+
+from config import LOCAL_ABSOLUTE_PATH
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-gradual_df=pd.read_csv('../gradual_cd_2000.csv')
-
+# gradual_df=pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/gradual_df.csv')
+gradual_df=pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/gradual_df.csv')
 def string_to_list(string_org):
     string=string_org.split(',')
     string_list=[]
@@ -214,5 +217,5 @@ gradual_df['training_RMSE'] = training_mean_rmse_list
 gradual_df['training_MAE'] = testing_mean_mae_list
 
 
-gradual_df.to_csv('gradual_cd_weighted_cv8_window_All.csv',index=False)
-prediction_mean_df.to_csv('gradual_prediction_weighted_cv8_window_All.csv',index=False)
+gradual_df.to_csv(LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_All/gradual_cd_weighted_cv8_window_All.csv',index=False)
+prediction_mean_df.to_csv(LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_All/gradual_prediction_weighted_cv8_window_All.csv',index=False)

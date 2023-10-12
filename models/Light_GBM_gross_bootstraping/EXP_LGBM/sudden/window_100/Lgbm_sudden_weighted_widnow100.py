@@ -12,9 +12,12 @@ import lightgbm as lgb
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
 import warnings
+
+from config import LOCAL_ABSOLUTE_PATH
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-sudden_df=pd.read_csv('../sudden_cd_3000.csv')
+sudden_df=pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/sudden_df.csv')
 sudden_df=sudden_df.drop_duplicates(subset=['drift_point'])
 sudden_df=sudden_df.sort_values('drift_point',ascending=True)
 sudden_df.reset_index(drop=True, inplace=True)
@@ -221,5 +224,5 @@ sudden_df['training_RMSE'] = training_mean_rmse_list
 sudden_df['training_MAE'] = testing_mean_mae_list
 
 
-sudden_df.to_csv('sudden_cd_weighted_window100.csv',index=False)
-prediction_mean_df.to_csv('sudden_pred_weighted_window100.csv',index=False)
+sudden_df.to_csv(LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_100/sudden_cd_weighted_window100.csv',index=False)
+prediction_mean_df.to_csv(LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_100/sudden_pred_weighted_window100.csv',index=False)
