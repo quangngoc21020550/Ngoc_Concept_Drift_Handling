@@ -12,118 +12,119 @@ import lightgbm as lgb
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
 import warnings
+
+from config import LOCAL_ABSOLUTE_PATH
+
 window_size_list=[1, 2, 3, 5, 10, 15]
 warnings.simplefilter(action='ignore', category=FutureWarning)
 from itertools import combinations
 
 # Load three types concept drift df
 
-sudden_df = pd.read_csv('Linear_LGBM/sudden/sudden_cd_3000.csv')
+sudden_df = pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/sudden_df.csv')
 sudden_df = sudden_df.drop_duplicates(subset=['drift_point'])
 sudden_df = sudden_df.sort_values('drift_point', ascending=True)
 sudden_df.reset_index(drop=True, inplace=True)
 
-gradual_df = pd.read_csv('Linear_LGBM/gradual/gradual_cd_2000.csv')
-
-incremental_df = pd.read_csv('Linear_LGBM/incremental/incremental_cd_2000.csv')
-
+gradual_df=pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/gradual_df.csv')
+incremental_df=pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/incremental_cd.csv')
 # Load prediction and RMSE
 
 ## Plain
 
 # sudden
 Plain_sudden_w200_df = pd.read_csv(
-    'Plain_LGBM_new/sudden/window_200/Plain_LGBM_sudden_cd_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/sudden/window_200/Plain_LGBM_sudden_cd_cv8_window200.csv')
 Plain_sudden_w200_predict_df = pd.read_csv(
-    'Plain_LGBM_new/sudden/window_200/Plain_GBMprediction_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/sudden/window_200/Plain_GBMprediction_cv8_window200.csv')
 Plain_sudden_wAll_df = pd.read_csv(
-    'Plain_LGBM_new/sudden/window_all/Plain_LGBM_sudden_cd_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/sudden/window_all/Plain_LGBM_sudden_cd_cv8_window_All.csv')
 Plain_sudden_wAll_predict_df = pd.read_csv(
-    'Plain_LGBM_new/sudden/window_all/Plain_LGBM_prediction_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/sudden/window_all/Plain_LGBM_prediction_cv8_window_All.csv')
 
 # incremental
 Plain_incremental_w200_df = pd.read_csv(
-    'Plain_LGBM_new/incremental/window_200/Plain_LGBM_Incremental_cd_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/incremental/window_200/Plain_LGBM_Incremental_cd_cv8_window200.csv')
 Plain_incremental_w200_predict_df = pd.read_csv(
-    'Plain_LGBM_new/incremental/window_200/Plain_LGBM_Incremental_prediction_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/incremental/window_200/Plain_LGBM_Incremental_prediction_cv8_window200.csv')
 Plain_incremental_wAll_df = pd.read_csv(
-    'Plain_LGBM_new/incremental/window_All/Plain_LGBM_Incremental_cd_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/incremental/window_All/Plain_LGBM_Incremental_cd_cv8_window_All.csv')
 Plain_incremental_wAll_predict_df = pd.read_csv(
-    'Plain_LGBM_new/incremental/window_All/Plain_LGBM_Incremental_prediction_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/incremental/window_All/Plain_LGBM_Incremental_prediction_cv8_window_All.csv')
 
 # gradual
 Plain_gradual_w200_df = pd.read_csv(
-    'Plain_LGBM_new/gradual/window_200/Plain_LGBM_gradual_cd_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/gradual/window_200/Plain_LGBM_gradual_cd_cv8_window200.csv')
 Plain_gradual_w200_predict_df = pd.read_csv(
-    'Plain_LGBM_new/gradual/window_200/plain_LGBM_gradual_prediction_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/gradual/window_200/plain_LGBM_gradual_prediction_cv8_window200.csv')
 Plain_gradual_wAll_df = pd.read_csv(
-    'Plain_LGBM_new/gradual/window_All/Plain_LGBM_gradual_cd_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/gradual/window_All/Plain_LGBM_gradual_cd_cv8_window_All.csv')
 Plain_gradual_wAll_predict_df = pd.read_csv(
-    'Plain_LGBM_new/gradual/window_All/Plain_LGBM_gradual_prediction_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Plain_LGBM/gradual/window_All/Plain_LGBM_gradual_prediction_cv8_window_All.csv')
 
 ## EXP
 
 # sudden
 EXP_sudden_w200_df = pd.read_csv(
-    'EXP_LGBM/sudden/window_200/sudden_cd_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_200/sudden_cd_weighted_cv8_window200.csv')
 EXP_sudden_w200_predict_df = pd.read_csv(
-    'EXP_LGBM/sudden/window_200/sudden_prediction_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_200/sudden_prediction_weighted_cv8_window200.csv')
 EXP_sudden_wAll_df = pd.read_csv(
-    'EXP_LGBM/sudden/window_all/sudden_cd_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_all/sudden_cd_weighted_cv8_window_All.csv')
 EXP_sudden_wAll_predict_df = pd.read_csv(
-    'EXP_LGBM/sudden/window_all/prediction_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_all/prediction_weighted_cv8_window_All.csv')
 
 # incremental
 EXP_incremental_w200_df = pd.read_csv(
-    'EXP_LGBM/incremental/window_200/Incremental_cd_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/incremental/window_200/Incremental_cd_weighted_cv8_window200.csv')
 EXP_incremental_w200_predict_df = pd.read_csv(
-    'EXP_LGBM/incremental/window_200/Incremental_prediction_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/incremental/window_200/Incremental_prediction_weighted_cv8_window200.csv')
 EXP_incremental_wAll_df = pd.read_csv(
-    'EXP_LGBM/incremental/window_All/Incremental_cd_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/incremental/window_All/Incremental_cd_weighted_cv8_window_All.csv')
 EXP_incremental_wAll_predict_df = pd.read_csv(
-    'EXP_LGBM/incremental/window_All/Incremental_prediction_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/incremental/window_All/Incremental_prediction_weighted_cv8_window_All.csv')
 
 # gradual
 EXP_gradual_w200_df = pd.read_csv(
-    'EXP_LGBM/gradual/window_200/gradual_cd_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_200/gradual_cd_weighted_cv8_window200.csv')
 EXP_gradual_w200_predict_df = pd.read_csv(
-    'EXP_LGBM/gradual/window_200/gradual_prediction_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_200/gradual_prediction_weighted_cv8_window200.csv')
 EXP_gradual_wAll_df = pd.read_csv(
-    'EXP_LGBM/gradual/window_All/gradual_cd_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_All/gradual_cd_weighted_cv8_window_All.csv')
 EXP_gradual_wAll_predict_df = pd.read_csv(
-    'EXP_LGBM/gradual/window_All/gradual_prediction_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/gradual/window_All/gradual_prediction_weighted_cv8_window_All.csv')
 
 ## Linear
 
 # sudden
 Linear_sudden_w200_df = pd.read_csv(
-    'Linear_LGBM/sudden/window_200/Linear_sudden_cd_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/sudden/window_200/Linear_sudden_cd_weighted_cv8_window200.csv')
 Linear_sudden_w200_predict_df = pd.read_csv(
-    'Linear_LGBM/sudden/window_200/Linear_sudden_prediction_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/sudden/window_200/Linear_sudden_prediction_weighted_cv8_window200.csv')
 Linear_sudden_wAll_df = pd.read_csv(
-    'Linear_LGBM/sudden/window_all/Linear_sudden_cd_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/sudden/window_all/Linear_sudden_cd_weighted_cv8_window_All.csv')
 Linear_sudden_wAll_predict_df = pd.read_csv(
-    'Linear_LGBM/sudden/window_all/Linear_sudden_prediction_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/sudden/window_all/Linear_sudden_prediction_weighted_cv8_window_All.csv')
 
 # incremental
 Linear_incremental_w200_df = pd.read_csv(
-    'Linear_LGBM/incremental/window_200/Linear_Incremental_cd_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/incremental/window_200/Linear_Incremental_cd_weighted_cv8_window200.csv')
 Linear_incremental_w200_predict_df = pd.read_csv(
-    'Linear_LGBM/incremental/window_200/Linear_Incremental_prediction_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/incremental/window_200/Linear_Incremental_prediction_weighted_cv8_window200.csv')
 Linear_incremental_wAll_df = pd.read_csv(
-    'Linear_LGBM/incremental/window_All/Linear_Incremental_cd_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/incremental/window_All/Linear_Incremental_cd_weighted_cv8_window_All.csv')
 Linear_incremental_wAll_predict_df = pd.read_csv(
-    'Linear_LGBM/incremental/window_All/Linear_Incremental_prediction_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/incremental/window_All/Linear_Incremental_prediction_weighted_cv8_window_All.csv')
 
 # gradual
 Linear_gradual_w200_df = pd.read_csv(
-    'Linear_LGBM/gradual/window_200/Linear_gradual_cd_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/gradual/window_200/Linear_gradual_cd_weighted_cv8_window200.csv')
 Linear_gradual_w200_predict_df = pd.read_csv(
-    'Linear_LGBM/gradual/window_200/Linear_gradual_prediction_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/gradual/window_200/Linear_gradual_prediction_weighted_cv8_window200.csv')
 Linear_gradual_wAll_df = pd.read_csv(
-    'Linear_LGBM/gradual/window_All/Linear_gradual_cd_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/gradual/window_All/Linear_gradual_cd_weighted_cv8_window_All.csv')
 Linear_gradual_wAll_predict_df = pd.read_csv(
-    'Linear_LGBM/gradual/window_All/Linear_gradual_prediction_weighted_cv8_window_All.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/gradual/window_All/Linear_gradual_prediction_weighted_cv8_window_All.csv')
 
 
 # Function define
