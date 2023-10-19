@@ -16,7 +16,7 @@ import warnings
 from config import LOCAL_ABSOLUTE_PATH
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
-
+print("RUN MAIN 2 OK")
 # gradual_df=pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/gradual_df.csv')
 gradual_df=pd.read_csv(LOCAL_ABSOLUTE_PATH + 'Series_generation/simulated_data/gradual_df.csv')
 def string_to_list(string_org):

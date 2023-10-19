@@ -58,7 +58,7 @@ Plain_gradual_wAll_predict_df = pd.read_csv(
 EXP_sudden_w200_df = pd.read_csv(
     LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_200/sudden_cd_weighted_cv8_window200.csv')
 EXP_sudden_w200_predict_df = pd.read_csv(
-    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_200/sudden_prediction_weighted_cv8_window200.csv')
+    LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_200/prediction_weighted_cv8_window200.csv')
 EXP_sudden_wAll_df = pd.read_csv(
     LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/EXP_LGBM/sudden/window_all/sudden_cd_weighted_cv8_window_All.csv')
 EXP_sudden_wAll_predict_df = pd.read_csv(
@@ -115,6 +115,7 @@ Linear_gradual_wAll_df = pd.read_csv(
 Linear_gradual_wAll_predict_df = pd.read_csv(
     LOCAL_ABSOLUTE_PATH + 'models/Light_GBM_gross_bootstraping/Linear_LGBM/gradual/window_All/Linear_gradual_prediction_weighted_cv8_window_All.csv')
 
+print('done read csv')
 
 def RSS_calculator(y, y_hat):
     RSS = np.sum((y - y_hat) ** 2)
@@ -303,17 +304,18 @@ for df_pairs in sudden_pair_list:
 
     file_name = df_pairs[0] + '_' + df_pairs[1]
     infor = 'Sudden_RSS_based_ECW_'
-    path = 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+    path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
     # get mean
-    window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
+    window_size_df_RMSE = window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
                                         df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
 
-    window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
-    window_size_RMSE_mean_dict['info'] = file_name
+    window_size_RMSE_mean_dict = [file_name]
+    window_size_RMSE_mean_dict = window_size_RMSE_mean_dict + list(dict(np.mean(window_size_df_RMSE, axis=0)).values())
 
-    sudden_ECW_mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
-
+    sudden_ECW_mean_df.loc[len(sudden_ECW_mean_df.index)] = window_size_RMSE_mean_dict
+infor = 'Sudden_RSS_based_ECW_'
+path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
 sudden_ECW_mean_df.to_csv(path + infor + 'mean.csv')
 
 incremenal_ECW_mean_df = pd.DataFrame({
@@ -345,7 +347,7 @@ for df_pairs in Incremetnal_pair_list:
 
     file_name = df_pairs[0] + '_' + df_pairs[1]
     infor = 'incremental_RSS_based_ECW_'
-    path = 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+    path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
 
     # get mean
@@ -388,7 +390,7 @@ for df_pairs in Incremetnal_pair_list:
 
     file_name = df_pairs[0] + '_' + df_pairs[1]
     infor = 'incremental_RSS_based_ECW_'
-    path = 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+    path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
 
     # get mean

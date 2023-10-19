@@ -1,6 +1,9 @@
+import os
+print("RUN MAIN OK")
+# print(os.environ['PATH'])
+import numpy as np
 import pandas as pd
 import itertools
-import numpy as np
 import random
 from random import choices
 from pandas.plotting import autocorrelation_plot
