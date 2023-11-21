@@ -229,7 +229,7 @@ def GDW_method(error_function,
         'window_size_15_RMSE': []
     })
 
-    for row in range(len(drfit_type_df)):
+    for row in range(len(df2)):
 
         series_row = drfit_type_df.loc[row]
         series = series_row['series']
@@ -269,9 +269,7 @@ def GDW_method(error_function,
 
                     weight_1_update = weight_1 - grad_1 * learning_rate
                     weight_2_update = weight_2 - grad_2 * learning_rate
-                    weighted_df.iloc[
-                        i, 3] = weight_1_update * weighted_df.iloc[
-                        i, 0] + weight_2_update * weighted_df.iloc[i, 1]
+                    weighted_df.iloc[i, 3] = weight_1_update * weighted_df.iloc[i, 0] + weight_2_update * weighted_df.iloc[i, 1]
                     weight_1 = weight_1_update
                     weight_2 = weight_2_update
 
@@ -316,18 +314,23 @@ for df_pairs in sudden_pair_list:
 
     file_name = df_pairs[0] + '_' + df_pairs[1]
     infor = 'Sudden_RSS_based_GDW_'
-    path = 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+    path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
 
     # get mean
     window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
                                         df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
 
-    window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
-    window_size_RMSE_mean_dict['info'] = file_name
+    # window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
+    # window_size_RMSE_mean_dict['info'] = file_name
+    #
+    # sudden_GDW__mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
+    window_size_RMSE_mean_dict = [file_name]
+    window_size_RMSE_mean_dict = window_size_RMSE_mean_dict + list(dict(np.mean(window_size_df_RMSE, axis=0)).values())
 
-    sudden_GDW__mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
-
+    sudden_GDW__mean_df.loc[len(sudden_GDW__mean_df.index)] = window_size_RMSE_mean_dict
+infor = 'Sudden_RSS_based_GDW_'
+path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
 sudden_GDW__mean_df.to_csv(path + infor + 'mean.csv')
 
 incremental_GDW__mean_df=pd.DataFrame({
@@ -359,18 +362,24 @@ for df_pairs in Incremetnal_pair_list:
 
     file_name = df_pairs[0] + '_' + df_pairs[1]
     infor = 'incremental_RSS_based_GDW_'
-    path = 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+    path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
 
     # get mean
     window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
                                         df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
 
-    window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
-    window_size_RMSE_mean_dict['info'] = file_name
+    # window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
+    # window_size_RMSE_mean_dict['info'] = file_name
+    #
+    # incremental_GDW__mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
+    window_size_RMSE_mean_dict = [file_name]
+    window_size_RMSE_mean_dict = window_size_RMSE_mean_dict + list(dict(np.mean(window_size_df_RMSE, axis=0)).values())
 
-    incremental_GDW__mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
+    incremental_GDW__mean_df.loc[len(incremental_GDW__mean_df.index)] = window_size_RMSE_mean_dict
 
+infor = 'incremental_RSS_based_GDW_'
+path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
 incremental_GDW__mean_df.to_csv(path + infor + 'mean.csv')
 
 gradual_GDW__mean_df=pd.DataFrame({
@@ -402,16 +411,22 @@ for df_pairs in Gradual_pair_list:
 
     file_name = df_pairs[0] + '_' + df_pairs[1]
     infor = 'gradual_RSS_based_GDW_'
-    path = 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+    path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
 
     # get mean
     window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
                                         df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
 
-    window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
-    window_size_RMSE_mean_dict['info'] = file_name
+    # window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
+    # window_size_RMSE_mean_dict['info'] = file_name
+    #
+    # gradual_GDW__mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
+    window_size_RMSE_mean_dict = [file_name]
+    window_size_RMSE_mean_dict = window_size_RMSE_mean_dict + list(dict(np.mean(window_size_df_RMSE, axis=0)).values())
 
-    gradual_GDW__mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
+    gradual_GDW__mean_df.loc[len(gradual_GDW__mean_df.index)] = window_size_RMSE_mean_dict
 
+infor = 'gradual_RSS_based_GDW_'
+path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
 gradual_GDW__mean_df.to_csv(path + infor + 'mean.csv')

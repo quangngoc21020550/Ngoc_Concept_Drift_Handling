@@ -8,7 +8,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import pyplot
-import lightgbm as lgb
+# import lightgbm as lgb
+lgb = 'a'
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
 import warnings

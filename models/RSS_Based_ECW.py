@@ -8,7 +8,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import pyplot
-import lightgbm as lgb
+# import lightgbm as lgb
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
 import warnings
@@ -223,14 +223,16 @@ def ECW_method(error_function, window_size_list, drfit_type_df, df1, df2):
         'window_size_15_RMSE': []
     })
 
-    for row in range(len(drfit_type_df)):
+    for row in range(len(df2)):
 
         series_row = drfit_type_df.loc[row]
         series = series_row['series']
         series_list = string_to_list(series)
-
-        df1_predic_df_perdiction = df1.iloc[:, row]
-        df2__predic_df_perdiction = df2.iloc[:, row]
+        try:
+            df1_predic_df_perdiction = df1.iloc[:, row]
+            df2__predic_df_perdiction = df2.iloc[:, row]
+        except Exception as e:
+            raise e
 
         weighted_df = pd.DataFrame({
             'df1_predic': df1_predic_df_perdiction,
@@ -246,6 +248,7 @@ def ECW_method(error_function, window_size_list, drfit_type_df, df1, df2):
                         i, 0] + 0.5 * weighted_df.iloc[i, 1]
 
                 else:
+
                     df1_error_sum = error_function(
                         weighted_df.iloc[i - window_size_list[x]:i, 2],
                         weighted_df.iloc[i - window_size_list[x]:i, 0])
@@ -256,11 +259,8 @@ def ECW_method(error_function, window_size_list, drfit_type_df, df1, df2):
                     sum_error = df1_error_sum + df2_error_sum
                     df1_error_percentage = df1_error_sum / sum_error
 
-                    weighted_df.iloc[i, 3] = (
-                                                     1 - df1_error_percentage
-                                             ) * weighted_df.iloc[
-                                                 i, 0] + df1_error_percentage * weighted_df.iloc[
-                                                 i, 1]
+                    weighted_df.iloc[i, 3] = (1 - df1_error_percentage) * weighted_df.iloc[i, 0] + \
+                                             df1_error_percentage * weighted_df.iloc[i, 1]
 
             window_weighted_RMSE = np.sqrt(
                 ((weighted_df['weighted_perdiction'] -
@@ -275,131 +275,152 @@ def ECW_method(error_function, window_size_list, drfit_type_df, df1, df2):
 window_size_list=[1, 2, 3, 5, 10, 15]
 
 
-sudden_ECW_mean_df = pd.DataFrame({
-    'info': [],
-    'window_size_1_RMSE': [],
-    'window_size_2_RMSE': [],
-    'window_size_3_RMSE': [],
-    'window_size_5_RMSE': [],
-    'window_size_10_RMSE': [],
-    'window_size_15_RMSE': [],
-    'No_weighted_LGBM_1_RMSE': [],
-    'No_weighted_LGBM_2_RMSE': []})
+# sudden_ECW_mean_df = pd.DataFrame({
+#     'info': [],
+#     'window_size_1_RMSE': [],
+#     'window_size_2_RMSE': [],
+#     'window_size_3_RMSE': [],
+#     'window_size_5_RMSE': [],
+#     'window_size_10_RMSE': [],
+#     'window_size_15_RMSE': [],
+#     'No_weighted_LGBM_1_RMSE': [],
+#     'No_weighted_LGBM_2_RMSE': []})
+#
+# sudden_pair_list = []
+# Sudden_list = list(Sudden_dict.keys())
+# sudden_pair_list.extend(df_pair(Sudden_list, 2))
+#
+# for df_pairs in sudden_pair_list:
+#     df1 = Sudden_dict[df_pairs[0]]
+#     df2 = Sudden_dict[df_pairs[1]]
+#     window_size_df_RMSE = ECW_method(error_function=RSS_calculator,
+#                                      window_size_list=window_size_list,
+#                                      drfit_type_df=sudden_df,
+#                                      df1=df1,
+#                                      df2=df2)
+#
+#     window_size_df_RMSE[df_pairs[0]] = Sudden_LGBM_RMSE_dict[df_pairs[0]]
+#     window_size_df_RMSE[df_pairs[1]] = Sudden_LGBM_RMSE_dict[df_pairs[1]]
+#
+#     file_name = df_pairs[0] + '_' + df_pairs[1]
+#     infor = 'Sudden_RSS_based_ECW_'
+#     path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+#     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
+#     # get mean
+#     window_size_df_RMSE = window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
+#                                         df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
+#
+#     window_size_RMSE_mean_dict = [file_name]
+#     window_size_RMSE_mean_dict = window_size_RMSE_mean_dict + list(dict(np.mean(window_size_df_RMSE, axis=0)).values())
+#
+#     sudden_ECW_mean_df.loc[len(sudden_ECW_mean_df.index)] = window_size_RMSE_mean_dict
+# infor = 'Sudden_RSS_based_ECW_'
+# path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+# sudden_ECW_mean_df.to_csv(path + infor + 'mean.csv')
 
-sudden_pair_list = []
-Sudden_list = list(Sudden_dict.keys())
-sudden_pair_list.extend(df_pair(Sudden_list, 2))
+# incremenal_ECW_mean_df = pd.DataFrame({
+#     'info': [],
+#     'window_size_1_RMSE': [],
+#     'window_size_2_RMSE': [],
+#     'window_size_3_RMSE': [],
+#     'window_size_5_RMSE': [],
+#     'window_size_10_RMSE': [],
+#     'window_size_15_RMSE': [],
+#     'No_weighted_LGBM_1_RMSE': [],
+#     'No_weighted_LGBM_2_RMSE': []})
+#
+# Incremetnal_pair_list = []
+# Incremetnal_list = list(Incremetnal_dict.keys())
+# Incremetnal_pair_list.extend(df_pair(Incremetnal_list, 2))
+#
+# for df_pairs in Incremetnal_pair_list:
+#     print(df_pairs)
+#     df1 = Incremetnal_dict[df_pairs[0]]
+#     df2 = Incremetnal_dict[df_pairs[1]]
+#     window_size_df_RMSE = ECW_method(error_function=RSS_calculator,
+#                                      window_size_list=window_size_list,
+#                                      drfit_type_df=incremental_df,
+#                                      df1=df1,
+#                                      df2=df2)
+#
+#     window_size_df_RMSE[df_pairs[0]] = Incremetnal_LGBM_RMSE_dict[df_pairs[0]]
+#     window_size_df_RMSE[df_pairs[1]] = Incremetnal_LGBM_RMSE_dict[df_pairs[1]]
+#
+#     file_name = df_pairs[0] + '_' + df_pairs[1]
+#     infor = 'incremental_RSS_based_ECW_'
+#     path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+#     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
+#
+#     # get mean
+#     # window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
+#     #                                     df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
+#     #
+#     # window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
+#     # window_size_RMSE_mean_dict['info'] = file_name
+#     #
+#     # incremenal_ECW_mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
+#     window_size_df_RMSE = window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
+#                                                               df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
+#
+#     window_size_RMSE_mean_dict = [file_name]
+#     window_size_RMSE_mean_dict = window_size_RMSE_mean_dict + list(dict(np.mean(window_size_df_RMSE, axis=0)).values())
+#
+#     incremenal_ECW_mean_df.loc[len(incremenal_ECW_mean_df.index)] = window_size_RMSE_mean_dict
+# infor = 'incremental_RSS_based_ECW_'
+# path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+#
+#
+# incremenal_ECW_mean_df.to_csv(path + infor + 'mean.csv')
 
-for df_pairs in sudden_pair_list:
-    df1 = Sudden_dict[df_pairs[0]]
-    df2 = Sudden_dict[df_pairs[1]]
+
+gradual_GDW__mean_df=pd.DataFrame({
+                        'info':[],
+                        'window_size_1_RMSE':[],
+                        'window_size_2_RMSE':[],
+                        'window_size_3_RMSE':[],
+                        'window_size_5_RMSE':[],
+                        'window_size_10_RMSE':[],
+                        'window_size_15_RMSE':[],
+                        'No_weighted_LGBM_1_RMSE':[],
+                        'No_weighted_LGBM_2_RMSE':[]})
+
+Gradual_pair_list = []
+Gradual_list = list(Gradual_dict.keys())
+Gradual_pair_list.extend(df_pair(Gradual_list, 2))
+
+for df_pairs in Gradual_pair_list:
+    df1 = Gradual_dict[df_pairs[0]]
+    df2 = Gradual_dict[df_pairs[1]]
     window_size_df_RMSE = ECW_method(error_function=RSS_calculator,
-                                     window_size_list=window_size_list,
-                                     drfit_type_df=sudden_df,
-                                     df1=df1,
-                                     df2=df2)
+                                    window_size_list=window_size_list,
+                                    drfit_type_df=gradual_df,
+                                    df1=df1,
+                                    df2=df2)
 
-    window_size_df_RMSE[df_pairs[0]] = Sudden_LGBM_RMSE_dict[df_pairs[0]]
-    window_size_df_RMSE[df_pairs[1]] = Sudden_LGBM_RMSE_dict[df_pairs[1]]
+    window_size_df_RMSE[df_pairs[0]] = Gradual_LGBM_RMSE_dict[df_pairs[0]]
+    window_size_df_RMSE[df_pairs[1]] = Gradual_LGBM_RMSE_dict[df_pairs[1]]
 
     file_name = df_pairs[0] + '_' + df_pairs[1]
-    infor = 'Sudden_RSS_based_ECW_'
+    infor = 'gradual_RSS_based_ECW_'
     path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
     window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
+
     # get mean
     window_size_df_RMSE = window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
-                                        df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
+                                                              df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
 
     window_size_RMSE_mean_dict = [file_name]
     window_size_RMSE_mean_dict = window_size_RMSE_mean_dict + list(dict(np.mean(window_size_df_RMSE, axis=0)).values())
 
-    sudden_ECW_mean_df.loc[len(sudden_ECW_mean_df.index)] = window_size_RMSE_mean_dict
-infor = 'Sudden_RSS_based_ECW_'
-path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
-sudden_ECW_mean_df.to_csv(path + infor + 'mean.csv')
+    gradual_GDW__mean_df.loc[len(gradual_GDW__mean_df.index)] = window_size_RMSE_mean_dict
+    # window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
+    #                                     df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
+    #
+    # window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
+    # window_size_RMSE_mean_dict['info'] = file_name
+    #
+    # gradual_GDW__mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
 
-incremenal_ECW_mean_df = pd.DataFrame({
-    'info': [],
-    'window_size_1_RMSE': [],
-    'window_size_2_RMSE': [],
-    'window_size_3_RMSE': [],
-    'window_size_5_RMSE': [],
-    'window_size_10_RMSE': [],
-    'window_size_15_RMSE': [],
-    'No_weighted_LGBM_1_RMSE': [],
-    'No_weighted_LGBM_2_RMSE': []})
-
-Incremetnal_pair_list = []
-Incremetnal_list = list(Incremetnal_dict.keys())
-Incremetnal_pair_list.extend(df_pair(Incremetnal_list, 2))
-
-for df_pairs in Incremetnal_pair_list:
-    df1 = Incremetnal_dict[df_pairs[0]]
-    df2 = Incremetnal_dict[df_pairs[1]]
-    window_size_df_RMSE = ECW_method(error_function=RSS_calculator,
-                                     window_size_list=window_size_list,
-                                     drfit_type_df=incremental_df,
-                                     df1=df1,
-                                     df2=df2)
-
-    window_size_df_RMSE[df_pairs[0]] = Incremetnal_LGBM_RMSE_dict[df_pairs[0]]
-    window_size_df_RMSE[df_pairs[1]] = Incremetnal_LGBM_RMSE_dict[df_pairs[1]]
-
-    file_name = df_pairs[0] + '_' + df_pairs[1]
-    infor = 'incremental_RSS_based_ECW_'
-    path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
-    window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
-
-    # get mean
-    window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
-                                        df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
-
-    window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
-    window_size_RMSE_mean_dict['info'] = file_name
-
-    incremenal_ECW_mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
-
-incremenal_ECW_mean_df.to_csv(path + infor + 'mean.csv')
-
-incremenal_ECW_mean_df = pd.DataFrame({
-    'info': [],
-    'window_size_1_RMSE': [],
-    'window_size_2_RMSE': [],
-    'window_size_3_RMSE': [],
-    'window_size_5_RMSE': [],
-    'window_size_10_RMSE': [],
-    'window_size_15_RMSE': [],
-    'No_weighted_LGBM_1_RMSE': [],
-    'No_weighted_LGBM_2_RMSE': []})
-
-Incremetnal_pair_list = []
-Incremetnal_list = list(Incremetnal_dict.keys())
-Incremetnal_pair_list.extend(df_pair(Incremetnal_list, 2))
-
-for df_pairs in Incremetnal_pair_list:
-    df1 = Incremetnal_dict[df_pairs[0]]
-    df2 = Incremetnal_dict[df_pairs[1]]
-    window_size_df_RMSE = ECW_method(error_function=RSS_calculator,
-                                     window_size_list=window_size_list,
-                                     drfit_type_df=incremental_df,
-                                     df1=df1,
-                                     df2=df2)
-
-    window_size_df_RMSE[df_pairs[0]] = Incremetnal_LGBM_RMSE_dict[df_pairs[0]]
-    window_size_df_RMSE[df_pairs[1]] = Incremetnal_LGBM_RMSE_dict[df_pairs[1]]
-
-    file_name = df_pairs[0] + '_' + df_pairs[1]
-    infor = 'incremental_RSS_based_ECW_'
-    path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
-    window_size_df_RMSE.to_csv(path + infor + file_name + '.csv')
-
-    # get mean
-    window_size_df_RMSE.rename(columns={df_pairs[0]: 'No_weighted_LGBM_1_RMSE',
-                                        df_pairs[1]: 'No_weighted_LGBM_2_RMSE'})
-
-    window_size_RMSE_mean_dict = dict(np.mean(window_size_df_RMSE, axis=0))
-    window_size_RMSE_mean_dict['info'] = file_name
-
-    incremenal_ECW_mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
-
-incremenal_ECW_mean_df.to_csv(path + infor + 'mean.csv')
+infor = 'gradual_RSS_based_ECW_'
+path = 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+gradual_GDW__mean_df.to_csv(path + infor + 'mean.csv')
