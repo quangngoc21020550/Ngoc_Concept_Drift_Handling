@@ -422,5 +422,5 @@ for df_pairs in Gradual_pair_list:
     # gradual_GDW__mean_df.append(window_size_RMSE_mean_dict, ignore_index=True)
 
 infor = 'gradual_RSS_based_ECW_'
-path = 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
+path = LOCAL_ABSOLUTE_PATH + 'Plain_EXP_Linear_RSS_RMSE_Result_Summary/'
 gradual_GDW__mean_df.to_csv(path + infor + 'mean.csv')

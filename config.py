@@ -1,1 +1,1 @@
-LOCAL_ABSOLUTE_PATH = 'D:/python-folder/KPDL/'
+LOCAL_ABSOLUTE_PATH = ''
